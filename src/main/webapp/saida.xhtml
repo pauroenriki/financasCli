@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template.xhtml">
+	<ui:define name="header">
+
+		<h:outputLabel value="Cadastro de Saída" />
+	</ui:define>
+	<ui:define name="article">
+	
+	<style>
+.ui-selectonemenu-filter{
+	width: 130% !important;
+}
+
+</style>
+		<h:form>
+			<p:growl id="msg" showDetail="true" life="3000" />
+			<p:panel header="Cadastro" styleClass="container">
+				<div class="ui-g ">
+					<div class="ui-g-2">
+						<p:outputLabel for="categoria" value="Categoria" />
+						<p:selectOneMenu id="categoria" style="width:98% !important"
+							filter="true" filterMatchMode="startsWith" required="true" requiredMessage="Preencha o campo Categoria"
+							value="#{saidaMB.saida.categoriaSaida}" converter="#{categoriaSaidaConverter}">
+							<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+							<f:selectItems value="#{saidaMB.categoriaSaidas}" var="item"
+								itemLabel="#{item.descricao}" itemValue="#{item}" />
+								<p:ajax event="change" process="@this" update="vr"/>
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-4">
+						<p:outputLabel for="descricao" value="Descricao" />
+						<p:inputText id="descricao" value="#{saidaMB.saida.descricao}"
+							required="true" requiredMessage="Preencha o campo Valor" />
+					</div>
+					<div class="ui-g-2">
+						<p:outputLabel for="dataVencimento" value="Data Vencimento"/>
+						<p:calendar id="dataVencimento" value="#{saidaMB.saida.dataVencimento}" pattern="dd/MM/yyyy" locale="pt_BR" required="true" requiredMessage="Favor preencha o campo Data Vencimento"/>
+					</div>
+					<div class="ui-g-1">
+						<p:outputLabel for="valor" value="Valor" />
+						<p:inputNumber id="valor" value="#{saidaMB.saida.valor}"
+							required="true" requiredMessage="Preencha o campo Valor" />
+					</div>
+					<div class="ui-g-1" style="text-align: center">
+						<p:outputLabel for="vr" value="VR" /><br />
+						<p:selectBooleanCheckbox id="vr" value="#{saidaMB.saida.vr}" label="VR" disabled="#{(saidaMB.saida.categoriaSaida.descricao != 'Mercado' and saidaMB.saida.categoriaSaida.descricao != 'Lanches e afins')
+						 or saidaMB.saida.categoriaSaida.descricao == null 
+							}" />
+					</div>
+					<div class="ui-g-1">
+						<p:outputLabel for="status" value="Status" />
+						<p:selectOneMenu id="status" style="width:98% !important"
+							value="#{saidaMB.saida.status}" required="true"
+							requiredMessage="Preencha o campo Status"
+							converter="#{categoriaSaidaConverter}">
+							<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+							<f:selectItems value="#{saidaMB.status}" />
+						</p:selectOneMenu>
+					</div>
+					
+					<div class="ui-g-1">
+
+						<p:commandButton icon="pi pi-save" action="#{saidaMB.salvar}" process="categoria descricao dataVencimento valor status vr @this"
+							update="@form" style="margin-top: 1.4em !important;">
+						</p:commandButton>
+					</div>
+				</div>
+			</p:panel>
+			<div style="margin-top: 2em; !important">
+
+				<p:panel styleClass="container" header="Pesquisa de Saídas">
+					<div class="ui-g ">
+						<div class="ui-g-2">
+							<p:outputLabel for="dataIni" value="Data Início"/>
+							<p:calendar id="dataIni" value="#{saidaMB.dataIni}" pattern="dd/MM/yyyy" locale="pt_BR" required="true" requiredMessage="Favor preencha o campo Data Início"/>
+						</div>
+						<div class="ui-g-2">
+							<p:outputLabel for="dataFim" value="Data Fim" />
+							<p:calendar id="dataFim" value="#{saidaMB.dataFim}" pattern="dd/MM/yyyy" locale="pt_BR" required="true" requiredMessage="Favor preencha o campo Data Fim"/>
+						</div>
+						<div class="ui-g-3">
+							<p:commandButton id="btPesquisar" icon="pi pi-search" process="dataIni dataFim @this"
+							 action="#{saidaMB.pesquisar}" 
+							update="@form" style="margin-top: 1.4em !important;" />
+						</div>
+					</div>
+					<div class="ui-g ">
+						<div class="ui-g-12">
+							<p:dataTable value="#{saidaMB.listaSaidas}" var="item" rows="5"
+								paginator="true"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} Registros"
+								rowsPerPageTemplate="5,10,15">
+
+
+								<p:column headerText="ID" style="width: 2em;">
+									<h:outputText value="#{item.id}" />
+								</p:column>
+								<p:column headerText="Data Lançamento" filterBy="#{item.data}">
+									<h:outputText value="#{item.data}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Descrição" filterBy="#{item.descricao}">
+									<h:outputText value="#{item.descricao}" />
+								</p:column>
+								<p:column headerText="Valor" filterBy="#{item.valor}">
+									<h:outputText value="#{item.valor}">
+										<f:convertNumber type="currency" locale="pt_BR" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="VR" filterBy="#{item.vr}" style="text-align:center" >
+									<i class="#{item.vr == true ? 'pi pi-check' : 'pi pi-times'} #{item.vr == true ? 'sim' : 'nao'}"></i>
+								</p:column>
+								<p:column headerText="Data Vencimento" filterBy="#{item.dataVencimento}">
+									<h:outputText value="#{item.dataVencimento}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Categoria"
+									filterBy="#{item.categoriaSaida.descricao}">
+									<h:outputText value="#{item.categoriaSaida.descricao}" />
+								</p:column>
+								<p:column headerText="Usuário" filterBy="#{item.usuario.nome}">
+									<h:outputText value="#{item.usuario.nome}" />
+								</p:column>
+								<p:column headerText="Status" filterBy="#{item.status}">
+									<h:outputText value="#{item.status}" />
+								</p:column>
+								<p:column headerText="Ações"
+									style="width: 80px; text-align:center">
+									<p:commandButton id="btAlterar" icon="pi pi-pencil"
+										process="@this" update="@form">
+										<f:setPropertyActionListener value="#{item}"
+											target="#{saidaMB.saida}" />
+									</p:commandButton>
+									<p:tooltip for="btAlterar" value="Alterar" />
+									<p:commandButton id="btExcluir" icon="pi pi-minus"
+										process="@this" action="#{saidaMB.excluir}" update="@form"
+										style="margin-left: 5px">
+										<p:confirm header="Confirme a ação"
+											message="Deseja excluir o registro?"
+											icon="pi pi-exclamation-triangle" />
+										<f:setPropertyActionListener value="#{item}"
+											target="#{saidaMB.saida}" />
+									</p:commandButton>
+									<p:tooltip for="btExcluir" value="Excluir" />
+								</p:column>
+								<f:facet name="footer"> Valor Total de 
+								<h:outputText value="#{saidaMB.valorTotal}">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+								 </f:facet>
+							</p:dataTable>
+						</div>
+					</div>
+				</p:panel>
+			</div>
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+</html>

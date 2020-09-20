@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template.xhtml">
+	<ui:define name="header">
+
+		<h:outputLabel value="Cadastro de Categoria de Saída" />
+	</ui:define>
+	<ui:define name="article">
+			<h:form id="form">
+			<p:growl id="msg" sticky="true" showDetail="true" life="5000" />
+				<p:panel header="Cadastro" styleClass="container">
+			<div class="ui-g ">
+					<div class="ui-g-6">
+						<p:outputLabel for="descricao" value="Descrição" />
+						<p:inputText id="descricao" value="#{categoriaSaidaMB.categoriaSaida.descricao}" required="true" requiredMessage="Descrição é obrigatório"/>
+					</div>
+					
+					<div class="ui-g-3">
+
+						<p:commandButton icon="pi pi-save" action="#{categoriaSaidaMB.salvar}"
+							update="@form" style="margin-top: 1.4em !important;">
+						</p:commandButton>
+					</div>
+			</div>
+				</p:panel>
+				
+				<div style="margin-top: 2em; !important">
+			<p:panel styleClass="container"  header="Categorias de Saída">
+			<div class="ui-g ">
+				<div class="ui-g-12">
+					<p:dataTable value="#{categoriaSaidaMB.categoriaSaidas}" var="item" rows="5"
+                 paginator="true"
+                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                 currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} Registros"
+                 rowsPerPageTemplate="5,10,15">
+
+						
+						<p:column headerText="ID" style="width: 2em;">
+							<h:outputText value="#{item.id}" />
+						</p:column>
+						<p:column headerText="Nome">
+							<h:outputText value="#{item.descricao}" />
+						</p:column>
+						<p:column headerText="Ações"
+							style="width: 80px; text-align:center">
+							<p:commandButton id="btAlterar" icon="pi pi-pencil" process="@this"
+								update="@form">
+								<f:setPropertyActionListener value="#{item}"
+									target="#{categoriaSaidaMB.categoriaSaida}" />
+								<p:tooltip for="btAlterar" value="Alterar" />
+							</p:commandButton>
+							<p:commandButton id="btExcluir" icon="pi pi-minus" style="margin-left:5px;" process="@this" action="#{categoriaSaidaMB.excluir}" update="@form">
+								<p:confirm header="Confirme a ação" message="Deseja excluir o registro?" icon="pi pi-exclamation-triangle" />
+								<f:setPropertyActionListener value="#{item}"
+									target="#{categoriaSaidaMB.categoriaSaida}" />
+							</p:commandButton>
+								<p:tooltip for="btExcluir" value="Excluir" />
+						</p:column>
+					</p:dataTable>
+				</div>
+			</div>
+				</p:panel>
+				</div>
+				
+				 <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+			        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+			        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+			    </p:confirmDialog>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+</html>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+<h:outputStylesheet name="jquery.jqplot.min.css" library="css" />
+	<h:outputStylesheet name="padrao.css" library="css" />
+</h:head>
+<h:body>
+
+	<p:layout fullPage="true">
+		<p:layoutUnit position="north" size="100" resizable="true"
+			collapsible="true">
+			<div class="ui-g">
+				<div class="ui-g-4">
+					<div class="header">
+					<h:form>
+						<a href="/financasCli/index.xhtml?faces-redirect=true">
+							<h:outputLabel value="Controle de Finanças" />
+						</a>
+					</h:form>
+					</div>
+				</div>
+				<div class="ui-g-8 subHeader">
+					<div class="subHeader">
+						<ui:insert name="header" />
+					</div>
+				</div>
+
+			</div>
+		</p:layoutUnit>
+
+		<p:layoutUnit position="south" size="100" resizable="true"
+			collapsible="true">
+			<ui:insert name="footer" />
+		</p:layoutUnit>
+
+		<p:layoutUnit position="west" size="200" resizable="true"
+			collapsible="true">
+			<h:form id="formMenu">
+				<p:panelMenu style="width:190px">
+					<p:submenu label="Cadastros">
+						<p:menuitem value="Entradas" action="/entrada.xhtml?faces-redirect=true" icon="pi pi-arrow-down" />
+						<p:menuitem value="Saídas" action="/saida.xhtml?faces-redirect=true" icon="pi pi-arrow-up" />
+						<p:menuitem value="Tipo de Entrada" action="/tipoEntrada.xhtml?faces-redirect=true"
+							icon="pi pi-align-right" />
+						<p:menuitem value="Categorias de Saída" action="/categoriaSaida.xhtml?faces-redirect=true"
+							icon="pi pi-align-left" />
+						<p:menuitem value="Usuários"
+							action="/usuario.xhtml?faces-redirect=true" icon="pi pi-users" />
+					</p:submenu>
+					<p:submenu label="Relatórios">
+						<p:menuitem value="Entradas e Saídas" action="/relatorio/relatorioComparacao.xhtml?faces-redirect=true" ajax="false"
+							icon="pi pi-align-justify" />
+					</p:submenu>
+					<p:separator />
+					<p:submenu label="Gráficos">
+						<p:menuitem value="Mobile" icon="pi pi-mobile" />
+					</p:submenu>
+				</p:panelMenu>
+			</h:form>
+
+		</p:layoutUnit>
+		<p:layoutUnit position="center">
+			<ui:insert name="article" />
+		</p:layoutUnit>
+
+	</p:layout>
+
+</h:body>
+
+</html>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template.xhtml">
+	<ui:define name="header">
+
+
+		<h:outputLabel value="Cadastro de Entrada" />
+	</ui:define>
+	<ui:define name="article">
+		<h:form>
+			<p:growl id="msg" sticky="true" showDetail="true" life="5000" />
+			<p:panel header="Cadastro" styleClass="container">
+				<div class="ui-g ">
+					<div class="ui-g-3">
+						<p:outputLabel for="tipo" value="Tipo" />
+						<p:selectOneMenu id="tipo" style="width:98% !important"
+						filter="true" filterMatchMode="startsWith" required="true"
+							requiredMessage="Preencha o campo Tipo"
+							value="#{entradaMB.entrada.tipoEntrada}"
+							converter="#{tipoEntradaConverter}">
+							<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+							<f:selectItems value="#{entradaMB.tipoEntradas}" var="item"
+								itemLabel="#{item.descricao}" itemValue="#{item}" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-3">
+						<p:outputLabel for="valor" value="Valor" />
+						<p:inputNumber id="valor" value="#{entradaMB.entrada.valor}" required="true"
+							requiredMessage="Preencha o campo Valor"/>
+					</div>
+
+					<div class="ui-g-3">
+
+						<p:commandButton icon="pi pi-save" action="#{entradaMB.salvar}"
+							update="@form" style="margin-top: 1.4em !important;">
+						</p:commandButton>
+					</div>
+				</div>
+			</p:panel>
+			<div style="margin-top: 2em; !important">
+
+				<p:panel styleClass="container" header="Tipos de Entrada">
+					<div class="ui-g ">
+						<div class="ui-g-12">
+							<p:dataTable value="#{entradaMB.entradas}" var="item" rows="5"
+                 paginator="true"
+                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                 currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} Registros"
+                 rowsPerPageTemplate="5,10,15">
+
+
+								<p:column headerText="ID" style="width: 2em;">
+									<h:outputText value="#{item.id}" />
+								</p:column>
+								<p:column headerText="Data">
+									<h:outputText value="#{item.data}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Valor">
+									<h:outputText value="#{item.valor}">
+										<f:convertNumber type="currency"
+											locale="pt_BR" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Tipo">
+									<h:outputText value="#{item.tipoEntrada.descricao}" />
+								</p:column>
+								<p:column headerText="Usuário">
+									<h:outputText value="#{item.usuario.nome}" />
+								</p:column>
+								<p:column headerText="Ações"
+									style="width: 80px; text-align:center">
+									<p:commandButton id="btAlterar" icon="pi pi-pencil"
+										process="@this" update="@form">
+										<f:setPropertyActionListener value="#{item}"
+											target="#{entradaMB.entrada}" />
+									</p:commandButton>
+									<p:tooltip for="btAlterar" value="Alterar" />
+									<p:commandButton id="btExcluir" icon="pi pi-minus"
+										process="@this" action="#{entradaMB.excluir}" update="@form"
+										style="margin-left: 5px">
+										<p:confirm header="Confirme a ação"
+											message="Deseja excluir o registro?"
+											icon="pi pi-exclamation-triangle" />
+										<f:setPropertyActionListener value="#{item}"
+											target="#{entradaMB.entrada}" />
+									</p:commandButton>
+									<p:tooltip for="btExcluir" value="Excluir" />
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</p:panel>
+			</div>
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+</html>

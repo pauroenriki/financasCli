@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template.xhtml">
+	<ui:define name="header">
+
+		<h:outputLabel value="Relatório de comparação entre Entradas e Saídas" />
+	</ui:define>
+	<ui:define name="article">
+	
+	<style>
+.ui-selectonemenu-filter{
+	width: 130% !important;
+}
+
+</style>
+		<h:form>
+		<h:outputStylesheet library="css" name="bootstrap.min.css" />
+	<h:outputScript library="js" name="bootstrap.min.js" />
+
+			<p:growl id="msg" showDetail="true" life="3000" />
+			
+			<div style="margin-top: 2em; !important">
+
+				<p:panel styleClass="container" header="Pesquisa de Saídas">
+					<div class="ui-g ">
+						<div class="ui-g-2">
+							<p:outputLabel for="dataIni" value="Data Início"/>
+							<p:calendar id="dataIni" value="#{relatorioComparacaoMB.dataIni}" pattern="dd/MM/yyyy" locale="pt_BR" required="true" requiredMessage="Favor preencha o campo Data Início"/>
+						</div>
+						<div class="ui-g-2">
+							<p:outputLabel for="dataFim" value="Data Fim" />
+							<p:calendar id="dataFim" value="#{relatorioComparacaoMB.dataFim}" pattern="dd/MM/yyyy" locale="pt_BR" required="true" requiredMessage="Favor preencha o campo Data Fim"/>
+						</div>
+						<div class="ui-g-3">
+							<p:commandButton id="btPesquisar" icon="pi pi-search" process="dataIni dataFim @this"
+							 action="#{relatorioComparacaoMB.pesquisar}" 
+							update="@form" style="margin-top: 1.4em !important;" />
+						</div>
+					</div>
+					<div class="ui-g ">
+						<div class="ui-g-6">
+							<p:dataTable value="#{relatorioComparacaoMB.listaEntradas}" var="item" rows="5"
+								paginator="true"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} Registros"
+								rowsPerPageTemplate="5,10,15">
+								
+								<f:facet name="header">Entradas</f:facet>
+								
+								<p:column headerText="Tipo"
+									filterBy="#{item.tipoEntrada.descricao}">
+									<h:outputText value="#{item.tipoEntrada.descricao}" />
+								</p:column>
+								
+								<p:column headerText="Valor">
+									<h:outputText value="#{item.valor}">
+										<f:convertNumber type="currency" locale="pt_BR" />
+									</h:outputText>
+								</p:column>
+								
+								<p:column headerText="Data" filterBy="#{item.data}">
+									<h:outputText value="#{item.data}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+								
+							</p:dataTable>
+						</div>
+						
+						<div class="ui-g-6">
+							<p:dataTable value="#{relatorioComparacaoMB.listaSaidas}" var="item" rows="5"
+								paginator="true"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} Registros"
+								rowsPerPageTemplate="5,10,15">
+								<f:facet name="header">Saídas</f:facet>
+								
+								<p:column headerText="Descrição" filterBy="#{item.descricao}">
+									<h:outputText value="#{item.descricao}" />
+								</p:column>
+								
+								<p:column headerText="Valor">
+									<h:outputText value="#{item.valor}">
+										<f:convertNumber type="currency" locale="pt_BR" />
+									</h:outputText>
+								</p:column>
+								
+								<p:column headerText="Vencimento" filterBy="#{item.dataVencimento}">
+									<h:outputText value="#{item.dataVencimento}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+								
+								<p:column headerText="Categoria"
+									filterBy="#{item.categoriaSaida.descricao}">
+									<h:outputText value="#{item.categoriaSaida.descricao}" />
+								</p:column>
+								
+								<p:column headerText="VR" filterBy="#{item.vr}" style="text-align:center" >
+									<i class="#{item.vr == true ? 'pi pi-check' : 'pi pi-times'} #{item.vr == true ? 'sim' : 'nao'}"></i>
+								</p:column>
+								
+								<f:facet name="footer"> Valor Total de 
+								<h:outputText value="#{relatorioComparacaoMB.totalSaida}">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+								 </f:facet>
+							</p:dataTable>
+						</div>
+						</div>
+							<f:facet name="footer"> 
+						<div class="ui-g">
+						<div class="ui-g-3">
+						Entrada VR 
+								<h:outputText value="#{relatorioComparacaoMB.totalEntradaVR}">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+						</div>
+						<div class="ui-g-3">
+						Demais Entradas 
+								<h:outputText value="#{relatorioComparacaoMB.totalEntrada}">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+						</div>
+						<div class="ui-g-3">
+							Saída VR 
+								<h:outputText value="#{relatorioComparacaoMB.totalSaidaVR}">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+						</div>
+						<div class="ui-g-3">
+							Demais Saídas 
+								<h:outputText value="#{relatorioComparacaoMB.totalSaida}">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+						</div>
+						<div class="ui-g-6 #{relatorioComparacaoMB.totalDiferenca >0 ? 'verde' : 'vermelho'}">
+							Diferença VR 
+								<h:outputText value="#{relatorioComparacaoMB.totalDiferencaVR}">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+						</div>
+						<div class="ui-g-6 #{relatorioComparacaoMB.totalDiferenca >0 ? 'verde' : 'vermelho'}">
+							Diferença Demais Valores
+								<h:outputText value="#{relatorioComparacaoMB.totalDiferenca}">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+						</div>
+					</div>
+				 </f:facet>
+				</p:panel>
+			</div>
+			<p:chart type="line" model="#{relatorioComparacaoMB.dateModel}" style="height:400px;"/>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+</html>
