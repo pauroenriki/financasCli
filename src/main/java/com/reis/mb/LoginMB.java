@@ -11,6 +11,8 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.primefaces.PrimeFaces;
+
 import com.reis.model.Usuario;
 import com.reis.service.UsuarioService;
 
@@ -26,7 +28,13 @@ public class LoginMB implements Serializable {
 	public String logar() {
 		UsuarioService service = new UsuarioService();
 		List<Usuario> usus = new ArrayList<>();
+		try {
 		usus = service.buscar("login/" + this.login);
+		}catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"ERRO", e.getMessage()));
+			PrimeFaces.current().executeScript("PF('dlgExplosao').show();");
+			return "";
+		}
 		FacesContext context = FacesContext.getCurrentInstance();
 		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
 		HttpSession session = request.getSession(true);

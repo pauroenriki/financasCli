@@ -24,11 +24,11 @@ import com.reis.service.SaidaService;
 
 @ManagedBean(name = "relatorioComparacaoMB")
 @ViewScoped
-public class RelatorioComparacaoMB implements Serializable{
+public class RelatorioComparacaoMB implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Date dataIni;
 	private Date dataFim;
-	
+
 	private EntradaService entradaService;
 	private SaidaService saidaService;
 	private List<Saida> listaSaidas;
@@ -40,7 +40,7 @@ public class RelatorioComparacaoMB implements Serializable{
 	private Double totalSaidaVR;
 	private Double totalDiferencaVR;
 	private BarChartModel dateModel;
-	
+
 	public RelatorioComparacaoMB() {
 		entradaService = new EntradaService();
 		saidaService = new SaidaService();
@@ -53,13 +53,13 @@ public class RelatorioComparacaoMB implements Serializable{
 		totalSaidaVR = 0.0;
 		totalDiferencaVR = 0.0;
 		dateModel = new BarChartModel();
-		}
-	
+	}
+
 	public void pesquisar() {
 		listaSaidas = new ArrayList<>();
 		listaEntradas = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String param = "periodo/" +sdf.format(dataIni) + ":" + sdf.format(dataFim);
+		String param = "periodo/" + sdf.format(dataIni) + ":" + sdf.format(dataFim);
 		List<Saida> listaS = saidaService.buscar(param);
 		listaEntradas = entradaService.buscar(param);
 		totalEntrada = 0.0;
@@ -68,56 +68,94 @@ public class RelatorioComparacaoMB implements Serializable{
 		totalEntradaVR = 0.0;
 		totalSaidaVR = 0.0;
 		totalDiferencaVR = 0.0;
-		listaS.forEach(x ->{
-			if(x.getStatus().equals(StatusEnum.PAGO)) {
-				if(x.isVr() == true) {
+		listaS.forEach(x -> {
+			if (x.getStatus().equals(StatusEnum.PAGO)) {
+				if (x.isVr() == true) {
 					totalSaidaVR = totalSaidaVR + x.getValor();
-				}else {
+				} else {
 					totalSaida = totalSaida + x.getValor();
 				}
 				listaSaidas.add(x);
 			}
 		});
-		
-		listaEntradas.forEach(x ->{
-				if(x.getTipoEntrada().getDescricao().equals("VR")) {
-					totalEntradaVR = totalEntradaVR + x.getValor();
-				}else {
-					totalEntrada = totalEntrada + x.getValor();
-				}
+
+		listaEntradas.forEach(x -> {
+			if (x.getTipoEntrada().getDescricao().equals("VR")) {
+				totalEntradaVR = totalEntradaVR + x.getValor();
+			} else {
+				totalEntrada = totalEntrada + x.getValor();
+			}
 		});
 		totalDiferenca = totalEntrada - totalSaida;
 		totalDiferencaVR = totalEntradaVR - totalSaidaVR;
 		createDateModel();
-		
-	  }
-	
-	 private void createDateModel() {
-	        dateModel = new BarChartModel();
-	        ChartSeries series1 = new ChartSeries();
-	        series1.setLabel("Entradas");
-	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	        for(Entrada ent : listaEntradas){
-	        	series1.set(sdf.format(ent.getData()), ent.getValor());
-	        }
-	        
-	        ChartSeries series2 = new ChartSeries();
-	        series2.setLabel("Saídas");
-	        
-	      
-	        for( Saida sai :listaSaidas){
-	        	series2.set(sdf.format(sai.getDataVencimento()), sai.getValor());
-	        }
-	 
-	        dateModel.addSeries(series1);
-	        dateModel.addSeries(series2);
-	 
-	        Axis axis = dateModel.getAxis(AxisType.Y);
-	        dateModel.setAnimate(true);
-	        dateModel.setLegendPosition("ne");
-	        
-	        
-	    }
+
+	}
+
+	private void createDateModel() {
+		dateModel = new BarChartModel();
+		ChartSeries series1 = new ChartSeries();
+		series1.setLabel("Entradas");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		List<Date> datas = trataDatas(listaEntradas, listaSaidas);
+		ChartSeries series2 = new ChartSeries();
+		ChartSeries series3 = new ChartSeries();
+		series2.setLabel("Saídas");
+		series3.setLabel("Diferença");
+		Double total = totalEntrada + totalEntradaVR;
+		for(Date data :datas){
+			series1.set(sdf.format(data), temDataEntrada(data));
+			Double vlsaida = temDataSaida(data);
+			series2.set(sdf.format(data), vlsaida);
+			total = total - vlsaida;
+			series3.set(sdf.format(data), total );
+		}
+
+		dateModel.addSeries(series1);
+		dateModel.addSeries(series2);
+		dateModel.addSeries(series3);
+
+		Axis axis = dateModel.getAxis(AxisType.Y);
+		dateModel.setAnimate(true);
+		dateModel.setLegendPosition("ne");
+
+	}
+
+	private Double temDataEntrada(Date data) {
+		Double valor = 0.0;
+		for (Entrada ent : listaEntradas) {
+			if (ent.getData().equals(data)) {
+				valor = valor + ent.getValor();
+			}
+		}
+		return valor;
+	}
+
+	private Double temDataSaida(Date data) {
+		Double valor = 0.0;
+		for (Saida sai : listaSaidas) {
+			if (sai.getDataVencimento().equals(data)) {
+				valor = valor + sai.getValor();
+			}
+		}
+		return valor;
+	}
+
+	private List<Date> trataDatas(List<Entrada> entradas, List<Saida> saidas) {
+		List<Date> datas = new ArrayList<>();
+		entradas.forEach(x -> {
+			if (!datas.contains(x.getData())) {
+				datas.add(x.getData());
+			}
+		});
+		saidas.forEach(x -> {
+			if (!datas.contains(x.getDataVencimento())) {
+				datas.add(x.getDataVencimento());
+			}
+		});
+
+		return datas;
+	}
 
 	public Date getDataIni() {
 		return dataIni;
@@ -222,7 +260,5 @@ public class RelatorioComparacaoMB implements Serializable{
 	public void setDateModel(BarChartModel dateModel) {
 		this.dateModel = dateModel;
 	}
-	
-	
-	
+
 }

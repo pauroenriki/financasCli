@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.reis.model.Usuario;
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.WebResource;
 
 public class UsuarioService {
@@ -22,10 +23,10 @@ public class UsuarioService {
 			    String json = wr.get(String.class);
 			    Gson gson = new Gson();
 			    return gson.fromJson(json, new TypeToken<List<Usuario>>(){}.getType());
-		} catch (Exception e) {
+		} catch (ClientHandlerException e) {
 			e.printStackTrace();
+			throw new ClientHandlerException("Conexão Recusada. Verifique se a API está em execução.");
 		}
-		return null;
 	}
 	
 	public void salvar(Usuario usuario) {
