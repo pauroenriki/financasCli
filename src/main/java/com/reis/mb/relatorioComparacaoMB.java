@@ -9,9 +9,11 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.DateAxis;
-import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 
 import com.reis.model.Entrada;
@@ -20,9 +22,9 @@ import com.reis.model.StatusEnum;
 import com.reis.service.EntradaService;
 import com.reis.service.SaidaService;
 
-@ManagedBean
+@ManagedBean(name = "relatorioComparacaoMB")
 @ViewScoped
-public class relatorioComparacaoMB implements Serializable{
+public class RelatorioComparacaoMB implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private Date dataIni;
 	private Date dataFim;
@@ -37,9 +39,9 @@ public class relatorioComparacaoMB implements Serializable{
 	private Double totalEntradaVR;
 	private Double totalSaidaVR;
 	private Double totalDiferencaVR;
-	private LineChartModel dateModel;
+	private BarChartModel dateModel;
 	
-	public relatorioComparacaoMB() {
+	public RelatorioComparacaoMB() {
 		entradaService = new EntradaService();
 		saidaService = new SaidaService();
 		listaSaidas = new ArrayList<>();
@@ -50,7 +52,7 @@ public class relatorioComparacaoMB implements Serializable{
 		totalEntradaVR = 0.0;
 		totalSaidaVR = 0.0;
 		totalDiferencaVR = 0.0;
-		dateModel = new LineChartModel();
+		dateModel = new BarChartModel();
 		}
 	
 	public void pesquisar() {
@@ -86,43 +88,35 @@ public class relatorioComparacaoMB implements Serializable{
 		});
 		totalDiferenca = totalEntrada - totalSaida;
 		totalDiferencaVR = totalEntradaVR - totalSaidaVR;
+		createDateModel();
 		
 	  }
 	
 	 private void createDateModel() {
-	        dateModel = new LineChartModel();
-	        LineChartSeries series1 = new LineChartSeries();
-	        series1.setLabel("Series 1");
-	 
-	        series1.set("2014-01-01", 51);
-	        series1.set("2014-01-06", 22);
-	        series1.set("2014-01-12", 65);
-	        series1.set("2014-01-18", 74);
-	        series1.set("2014-01-24", 24);
-	        series1.set("2014-01-30", 51);
-	 
-	        LineChartSeries series2 = new LineChartSeries();
-	        series2.setLabel("Series 2");
-	 
-	        series2.set("2014-01-01", 32);
-	        series2.set("2014-01-06", 73);
-	        series2.set("2014-01-12", 24);
-	        series2.set("2014-01-18", 12);
-	        series2.set("2014-01-24", 74);
-	        series2.set("2014-01-30", 62);
+	        dateModel = new BarChartModel();
+	        ChartSeries series1 = new ChartSeries();
+	        series1.setLabel("Entradas");
+	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	        for(Entrada ent : listaEntradas){
+	        	series1.set(sdf.format(ent.getData()), ent.getValor());
+	        }
+	        
+	        ChartSeries series2 = new ChartSeries();
+	        series2.setLabel("Saídas");
+	        
+	      
+	        for( Saida sai :listaSaidas){
+	        	series2.set(sdf.format(sai.getDataVencimento()), sai.getValor());
+	        }
 	 
 	        dateModel.addSeries(series1);
 	        dateModel.addSeries(series2);
 	 
-	        dateModel.setTitle("Zoom for Details");
-	        dateModel.setZoom(true);
-	        dateModel.getAxis(AxisType.Y).setLabel("Values");
-	        DateAxis axis = new DateAxis("Dates");
-	        axis.setTickAngle(-50);
-	        axis.setMax("2014-02-01");
-	        axis.setTickFormat("%b %#d, %y");
-	 
-	        dateModel.getAxes().put(AxisType.X, axis);
+	        Axis axis = dateModel.getAxis(AxisType.Y);
+	        dateModel.setAnimate(true);
+	        dateModel.setLegendPosition("ne");
+	        
+	        
 	    }
 
 	public Date getDataIni() {
@@ -221,11 +215,11 @@ public class relatorioComparacaoMB implements Serializable{
 		this.totalDiferencaVR = totalDiferencaVR;
 	}
 
-	public LineChartModel getDateModel() {
+	public BarChartModel getDateModel() {
 		return dateModel;
 	}
 
-	public void setDateModel(LineChartModel dateModel) {
+	public void setDateModel(BarChartModel dateModel) {
 		this.dateModel = dateModel;
 	}
 	

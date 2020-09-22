@@ -156,7 +156,7 @@
 				 </f:facet>
 				</p:panel>
 			</div>
-			<p:chart type="line" model="#{relatorioComparacaoMB.dateModel}" style="height:400px;"/>
+			<p:chart type="bar" model="#{relatorioComparacaoMB.dateModel}" style="height:400px;" rendered="#{relatorioComparacaoMB.dateModel != null}"/>
 		</h:form>
 	</ui:define>
 
