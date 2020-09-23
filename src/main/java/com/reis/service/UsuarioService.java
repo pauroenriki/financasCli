@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.reis.model.Usuario;
+import com.reis.service.util.LinkUtils;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.WebResource;
@@ -19,7 +20,7 @@ public class UsuarioService {
 		}
 		try {
 			 Client c = Client.create();
-			    WebResource wr = c.resource("http://localhost:8080/financas/api/v1/usuario"+param);
+			    WebResource wr = c.resource(LinkUtils.LINK_API +"usuario"+param);
 			    String json = wr.get(String.class);
 			    Gson gson = new Gson();
 			    return gson.fromJson(json, new TypeToken<List<Usuario>>(){}.getType());
@@ -35,7 +36,7 @@ public class UsuarioService {
 				update(usuario);
 				return;
 			}
-			String urlStr = "http://localhost:8080/financas/api/v1/usuario";
+			String urlStr = LinkUtils.LINK_API +"usuario";
 			String metodo = "POST";
 			Gson gson = new Gson();
 			String json = gson.toJson(usuario);
@@ -48,7 +49,7 @@ public class UsuarioService {
 
 	public void excluir(Usuario usuario) {
 		try {
-			String urlStr = "http://localhost:8080/financas/api/v1/usuario/" + usuario.getId();
+			String urlStr = LinkUtils.LINK_API +"usuario/" + usuario.getId();
 			String metodo = "DELETE";
 			Gson gson = new Gson();
 			String json = gson.toJson(usuario);
@@ -61,7 +62,7 @@ public class UsuarioService {
 
 	public void update(Usuario usuario) {
 		try {
-			String urlStr = "http://localhost:8080/financas/api/v1/usuario/" + usuario.getId();
+			String urlStr = LinkUtils.LINK_API +"usuario/" + usuario.getId();
 			String metodo = "PUT";
 			Gson gson = new Gson();
 			String json = gson.toJson(usuario);

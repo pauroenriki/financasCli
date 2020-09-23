@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.reis.model.Entrada;
 import com.reis.model.TipoEntrada;
+import com.reis.service.util.LinkUtils;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
@@ -19,7 +19,7 @@ public class TipoEntradaService {
 		}
 		try {
 			 Client c = Client.create();
-			    WebResource wr = c.resource("http://localhost:8080/financas/api/v1/tipoEntrada"+param);
+			    WebResource wr = c.resource(LinkUtils.LINK_API +"tipoEntrada"+param);
 			    String json = wr.get(String.class);
 			    Gson gson = new Gson();
 			    return gson.fromJson(json, new TypeToken<List<TipoEntrada>>(){}.getType());
@@ -32,7 +32,7 @@ public class TipoEntradaService {
 	public TipoEntrada buscarPorId(String id) {
 				try {
 			 Client c = Client.create();
-			    WebResource wr = c.resource("http://localhost:8080/financas/api/v1/tipoEntrada/"+id);
+			    WebResource wr = c.resource(LinkUtils.LINK_API +"tipoEntrada/"+id);
 			    String json = wr.get(String.class);
 			    Gson gson = new Gson();
 			    return gson.fromJson(json, new TypeToken<TipoEntrada>(){}.getType());
@@ -48,7 +48,7 @@ public class TipoEntradaService {
 				update(tipoEntrada);
 				return;
 			}
-			String urlStr = "http://localhost:8080/financas/api/v1/tipoEntrada";
+			String urlStr = LinkUtils.LINK_API +"tipoEntrada";
 			String metodo = "POST";
 			Gson gson = new Gson();
 			String json = gson.toJson(tipoEntrada);
@@ -61,7 +61,7 @@ public class TipoEntradaService {
 	
 	public void excluir(TipoEntrada tipoEntrada) {
 		try {
-			String urlStr = "http://localhost:8080/financas/api/v1/tipoEntrada/" + tipoEntrada.getId();
+			String urlStr = LinkUtils.LINK_API +"tipoEntrada/" + tipoEntrada.getId();
 			String metodo = "DELETE";
 			Gson gson = new Gson();
 			String json = gson.toJson(tipoEntrada);
@@ -74,7 +74,7 @@ public class TipoEntradaService {
 
 	public void update(TipoEntrada tipoEntrada) {
 		try {
-			String urlStr = "http://localhost:8080/financas/api/v1/tipoEntrada/" + tipoEntrada.getId();
+			String urlStr = LinkUtils.LINK_API +"tipoEntrada/" + tipoEntrada.getId();
 			String metodo = "PUT";
 			Gson gson = new Gson();
 			String json = gson.toJson(tipoEntrada);

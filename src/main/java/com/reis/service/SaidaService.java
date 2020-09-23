@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.reis.model.Saida;
+import com.reis.service.util.LinkUtils;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
@@ -19,7 +20,7 @@ public class SaidaService {
 		}
 		try {
 			 Client c = Client.create();
-			    WebResource wr = c.resource("http://localhost:8080/financas/api/v1/saida"+param);
+			    WebResource wr = c.resource(LinkUtils.LINK_API +"saida"+param);
 			    String json = wr.get(String.class);
 			    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd")
 			    		.create();
@@ -41,7 +42,7 @@ public class SaidaService {
 				update(saida);
 				return;
 			}
-			String urlStr = "http://localhost:8080/financas/api/v1/saida";
+			String urlStr = LinkUtils.LINK_API +"saida";
 			String metodo = "POST";
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 			String json = gson.toJson(saida);
@@ -54,7 +55,7 @@ public class SaidaService {
 	
 	public void excluir(Saida saida) {
 		try {
-			String urlStr = "http://localhost:8080/financas/api/v1/saida/" + saida.getId();
+			String urlStr = LinkUtils.LINK_API +"saida/" + saida.getId();
 			String metodo = "DELETE";
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 			String json = gson.toJson(saida);
@@ -67,7 +68,7 @@ public class SaidaService {
 
 	public void update(Saida saida) {
 		try {
-			String urlStr = "http://localhost:8080/financas/api/v1/saida/" + saida.getId();
+			String urlStr = LinkUtils.LINK_API +"saida/" + saida.getId();
 			String metodo = "PUT";
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 			String json = gson.toJson(saida);

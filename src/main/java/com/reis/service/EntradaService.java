@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.reis.model.Entrada;
+import com.reis.service.util.LinkUtils;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
@@ -19,7 +20,7 @@ public class EntradaService {
 		}
 		try {
 			 Client c = Client.create();
-			    WebResource wr = c.resource("http://localhost:8080/financas/api/v1/entrada"+param);
+			    WebResource wr = c.resource(LinkUtils.LINK_API +"entrada"+param);
 			    String json = wr.get(String.class);
 			    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd")
 			    		.create();
@@ -41,7 +42,7 @@ public class EntradaService {
 				update(entrada);
 				return;
 			}
-			String urlStr = "http://localhost:8080/financas/api/v1/entrada";
+			String urlStr = LinkUtils.LINK_API +"entrada";
 			String metodo = "POST";
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 			String json = gson.toJson(entrada);
@@ -54,7 +55,7 @@ public class EntradaService {
 	
 	public void excluir(Entrada entrada) {
 		try {
-			String urlStr = "http://localhost:8080/financas/api/v1/entrada/" + entrada.getId();
+			String urlStr = LinkUtils.LINK_API +"entrada/" + entrada.getId();
 			String metodo = "DELETE";
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 			String json = gson.toJson(entrada);
@@ -67,7 +68,7 @@ public class EntradaService {
 
 	public void update(Entrada entrada) {
 		try {
-			String urlStr = "http://localhost:8080/financas/api/v1/entrada/" + entrada.getId();
+			String urlStr = LinkUtils.LINK_API +"entrada/" + entrada.getId();
 			String metodo = "PUT";
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 			String json = gson.toJson(entrada);

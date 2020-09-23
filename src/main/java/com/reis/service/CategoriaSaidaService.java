@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.reis.model.CategoriaSaida;
+import com.reis.service.util.LinkUtils;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
@@ -18,7 +19,7 @@ public class CategoriaSaidaService {
 		}
 		try {
 			 Client c = Client.create();
-			    WebResource wr = c.resource("http://localhost:8080/financas/api/v1/categoriaSaida"+param);
+			    WebResource wr = c.resource(LinkUtils.LINK_API +"categoriaSaida"+param);
 			    String json = wr.get(String.class);
 			    Gson gson = new Gson();
 			    return gson.fromJson(json, new TypeToken<List<CategoriaSaida>>(){}.getType());
@@ -34,7 +35,7 @@ public class CategoriaSaidaService {
 				update(categoriaSaida);
 				return;
 			}
-			String urlStr = "http://localhost:8080/financas/api/v1/categoriaSaida";
+			String urlStr = LinkUtils.LINK_API +"categoriaSaida";
 			String metodo = "POST";
 			Gson gson = new Gson();
 			String json = gson.toJson(categoriaSaida);
@@ -47,7 +48,7 @@ public class CategoriaSaidaService {
 	
 	public void excluir(CategoriaSaida categoriaSaida) {
 		try {
-			String urlStr = "http://localhost:8080/financas/api/v1/categoriaSaida/" + categoriaSaida.getId();
+			String urlStr = LinkUtils.LINK_API +"categoriaSaida/" + categoriaSaida.getId();
 			String metodo = "DELETE";
 			Gson gson = new Gson();
 			String json = gson.toJson(categoriaSaida);
@@ -60,7 +61,7 @@ public class CategoriaSaidaService {
 
 	public void update(CategoriaSaida categoriaSaida) {
 		try {
-			String urlStr = "http://localhost:8080/financas/api/v1/categoriaSaida/" + categoriaSaida.getId();
+			String urlStr = LinkUtils.LINK_API +"categoriaSaida/" + categoriaSaida.getId();
 			String metodo = "PUT";
 			Gson gson = new Gson();
 			String json = gson.toJson(categoriaSaida);
@@ -74,7 +75,7 @@ public class CategoriaSaidaService {
 	public CategoriaSaida buscarPorId(String id) {
 		try {
 			 Client c = Client.create();
-			    WebResource wr = c.resource("http://localhost:8080/financas/api/v1/categoriaSaida/"+id);
+			    WebResource wr = c.resource(LinkUtils.LINK_API +"categoriaSaida/"+id);
 			    String json = wr.get(String.class);
 			    Gson gson = new Gson();
 			    return gson.fromJson(json, new TypeToken<CategoriaSaida>(){}.getType());
