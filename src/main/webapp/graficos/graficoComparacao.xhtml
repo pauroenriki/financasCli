@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template.xhtml">
+	<ui:define name="header">
+
+		<h:outputLabel value="Gráficos de comparação entre Entradas e Saídas" />
+	</ui:define>
+	<ui:define name="article">
+
+		<style>
+.ui-selectonemenu-filter {
+	width: 130% !important;
+}
+</style>
+
+<script type="text/javascript">
+function extLegend() 
+{
+    this.cfg.legend= {
+        show: true,
+        location: 'ne',
+        placement: 'outsideGrid'
+    };
+}
+</script>
+		<h:form>
+			<h:outputStylesheet library="css" name="bootstrap.min.css" />
+			<h:outputScript library="js" name="bootstrap.min.js" />
+
+			<p:growl id="msg" showDetail="true" life="3000" />
+
+			<div style="margin-top: 2em; !important">
+
+				<p:panel styleClass="container" header="Pesquisa de Saídas">
+					<div class="ui-g ">
+						<div class="ui-g-2">
+							<p:outputLabel for="dataIni" value="Data Início" />
+							<p:calendar id="dataIni" value="#{graficoComparacaoMB.dataIni}"
+								pattern="dd/MM/yyyy" locale="pt_BR" required="true"
+								requiredMessage="Favor preencha o campo Data Início" />
+						</div>
+						<div class="ui-g-2">
+							<p:outputLabel for="dataFim" value="Data Fim" />
+							<p:calendar id="dataFim" value="#{graficoComparacaoMB.dataFim}"
+								pattern="dd/MM/yyyy" locale="pt_BR" required="true"
+								requiredMessage="Favor preencha o campo Data Fim" />
+						</div>
+						<div class="ui-g-3">
+							<p:commandButton id="btPesquisar" icon="pi pi-search"
+								process="dataIni dataFim @this"
+								action="#{graficoComparacaoMB.pesquisar}" update="@form"
+								style="margin-top: 1.4em !important;" />
+						</div>
+					</div>
+					<div class="ui-g ">
+						<div class="ui-g-12">
+							<p:tabView>
+								<p:tab title="Entradas, Saídas e Diferença">
+									<p:chart type="bar" model="#{graficoComparacaoMB.dateModel}" responsive="true"
+										style="height:400px;"
+										rendered="#{graficoComparacaoMB.dateModel != null}" />
+								</p:tab>
+								<p:tab title="Categoria por Data">
+									<p:chart type="bar" model="#{graficoComparacaoMB.dateModelCategoriaPorDia}" responsive="true"
+										style="height:400px;"
+										rendered="#{graficoComparacaoMB.dateModelCategoriaPorDia != null}" />
+								</p:tab>
+								<p:tab title="Categoria Totais">
+									<p:chart type="bar" model="#{graficoComparacaoMB.dateModelCategoriaTotais}" extender="extLegend"
+										style="height:400px;"
+										rendered="#{graficoComparacaoMB.dateModelCategoriaTotais != null}" />
+								</p:tab>
+							</p:tabView>
+
+						</div>
+					</div>
+
+				</p:panel>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+</html>

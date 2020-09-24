@@ -4,23 +4,23 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.primefaces.model.chart.Axis;
-import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.ChartSeries;
-import org.primefaces.model.chart.DateAxis;
-import org.primefaces.model.chart.LineChartSeries;
 
 import com.reis.model.Entrada;
 import com.reis.model.Saida;
 import com.reis.model.StatusEnum;
+import com.reis.model.Usuario;
 import com.reis.service.EntradaService;
 import com.reis.service.SaidaService;
+import com.reis.service.UsuarioService;
 
 @ManagedBean(name = "relatorioComparacaoMB")
 @ViewScoped
@@ -39,7 +39,9 @@ public class RelatorioComparacaoMB implements Serializable {
 	private Double totalEntradaVR;
 	private Double totalSaidaVR;
 	private Double totalDiferencaVR;
-	private BarChartModel dateModel;
+	Map<String, Double> mapEntradas;
+	Map<String, Double> mapSaidas;
+	
 
 	public RelatorioComparacaoMB() {
 		entradaService = new EntradaService();
@@ -52,9 +54,35 @@ public class RelatorioComparacaoMB implements Serializable {
 		totalEntradaVR = 0.0;
 		totalSaidaVR = 0.0;
 		totalDiferencaVR = 0.0;
-		dateModel = new BarChartModel();
+		
 	}
 
+	public void ValoresEntradaPorUsuario(){
+		mapEntradas = new HashMap<String, Double>();
+		mapSaidas = new HashMap<String, Double>();
+		List<Usuario> users = new ArrayList<>();
+		UsuarioService us = new UsuarioService();
+		users = us.buscar(null);
+		for (Usuario usuario : users) {
+			
+			Double valorEnt = 0.0;
+			for (Entrada entrada : listaEntradas) {
+				if(usuario.getNome().contentEquals(entrada.getUsuario().getNome())) {
+					valorEnt = valorEnt + entrada.getValor();
+				}
+			}
+			mapEntradas.put(usuario.getNome(), valorEnt);
+			
+			Double valorSai = 0.0;
+			for (Saida saida : listaSaidas) {
+				if(usuario.getNome().contentEquals(saida.getUsuario().getNome())) {
+					valorSai = valorSai + saida.getValor();
+				}
+			}
+			mapSaidas.put(usuario.getNome(), valorSai);
+		}
+	}
+	
 	public void pesquisar() {
 		listaSaidas = new ArrayList<>();
 		listaEntradas = new ArrayList<>();
@@ -68,6 +96,7 @@ public class RelatorioComparacaoMB implements Serializable {
 		totalEntradaVR = 0.0;
 		totalSaidaVR = 0.0;
 		totalDiferencaVR = 0.0;
+		
 		listaS.forEach(x -> {
 			if (x.getStatus().equals(StatusEnum.PAGO)) {
 				if (x.isVr() == true) {
@@ -88,74 +117,11 @@ public class RelatorioComparacaoMB implements Serializable {
 		});
 		totalDiferenca = totalEntrada - totalSaida;
 		totalDiferencaVR = totalEntradaVR - totalSaidaVR;
-		createDateModel();
+		ValoresEntradaPorUsuario();
 
 	}
 
-	private void createDateModel() {
-		dateModel = new BarChartModel();
-		ChartSeries series1 = new ChartSeries();
-		series1.setLabel("Entradas");
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		List<Date> datas = trataDatas(listaEntradas, listaSaidas);
-		ChartSeries series2 = new ChartSeries();
-		ChartSeries series3 = new ChartSeries();
-		series2.setLabel("Saídas");
-		series3.setLabel("Diferença");
-		Double total = totalEntrada + totalEntradaVR;
-		for(Date data :datas){
-			series1.set(sdf.format(data), temDataEntrada(data));
-			Double vlsaida = temDataSaida(data);
-			series2.set(sdf.format(data), vlsaida);
-			total = total - vlsaida;
-			series3.set(sdf.format(data), total );
-		}
-
-		dateModel.addSeries(series1);
-		dateModel.addSeries(series2);
-		dateModel.addSeries(series3);
-
-		Axis axis = dateModel.getAxis(AxisType.Y);
-		dateModel.setAnimate(true);
-		dateModel.setLegendPosition("ne");
-
-	}
-
-	private Double temDataEntrada(Date data) {
-		Double valor = 0.0;
-		for (Entrada ent : listaEntradas) {
-			if (ent.getData().equals(data)) {
-				valor = valor + ent.getValor();
-			}
-		}
-		return valor;
-	}
-
-	private Double temDataSaida(Date data) {
-		Double valor = 0.0;
-		for (Saida sai : listaSaidas) {
-			if (sai.getDataVencimento().equals(data)) {
-				valor = valor + sai.getValor();
-			}
-		}
-		return valor;
-	}
-
-	private List<Date> trataDatas(List<Entrada> entradas, List<Saida> saidas) {
-		List<Date> datas = new ArrayList<>();
-		entradas.forEach(x -> {
-			if (!datas.contains(x.getData())) {
-				datas.add(x.getData());
-			}
-		});
-		saidas.forEach(x -> {
-			if (!datas.contains(x.getDataVencimento())) {
-				datas.add(x.getDataVencimento());
-			}
-		});
-
-		return datas;
-	}
+	
 
 	public Date getDataIni() {
 		return dataIni;
@@ -253,12 +219,21 @@ public class RelatorioComparacaoMB implements Serializable {
 		this.totalDiferencaVR = totalDiferencaVR;
 	}
 
-	public BarChartModel getDateModel() {
-		return dateModel;
+	public Map<String, Double> getMapEntradas() {
+		return mapEntradas;
 	}
 
-	public void setDateModel(BarChartModel dateModel) {
-		this.dateModel = dateModel;
+	public void setMapEntradas(Map<String, Double> mapEntradas) {
+		this.mapEntradas = mapEntradas;
 	}
+
+	public Map<String, Double> getMapSaidas() {
+		return mapSaidas;
+	}
+
+	public void setMapSaidas(Map<String, Double> mapSaidas) {
+		this.mapSaidas = mapSaidas;
+	}
+	
 
 }
