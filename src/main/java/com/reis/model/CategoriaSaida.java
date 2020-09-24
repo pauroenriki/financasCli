@@ -2,23 +2,37 @@ package com.reis.model;
 
 import java.io.Serializable;
 
-public class CategoriaSaida implements Serializable{
+public class CategoriaSaida implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String descricao;
+	private boolean habilitaVr;
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getDescricao() {
 		return descricao;
 	}
+
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
+
+	public boolean isHabilitaVr() {
+		return habilitaVr;
+	}
+
+	public void setHabilitaVr(boolean habilitaVr) {
+		this.habilitaVr = habilitaVr;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -26,6 +40,7 @@ public class CategoriaSaida implements Serializable{
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -42,6 +57,5 @@ public class CategoriaSaida implements Serializable{
 			return false;
 		return true;
 	}
-	
-	
+
 }

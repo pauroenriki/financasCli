@@ -20,9 +20,13 @@
 						<p:outputLabel for="descricao" value="Descrição" />
 						<p:inputText id="descricao" value="#{categoriaSaidaMB.categoriaSaida.descricao}" required="true" requiredMessage="Descrição é obrigatório"/>
 					</div>
+					<div class="ui-g-1" style="text-align: center">
+						<p:outputLabel for="vr" value="VR" /><br />
+						<p:selectBooleanCheckbox id="vr" value="#{categoriaSaidaMB.categoriaSaida.habilitaVr}" />
+						<p:tooltip for="vr" value="Permitir uso do VR no cadastro de Saídas." />
+					</div>
 					
 					<div class="ui-g-3">
-
 						<p:commandButton icon="pi pi-save" action="#{categoriaSaidaMB.salvar}"
 							update="@form" style="margin-top: 1.4em !important;">
 						</p:commandButton>
@@ -47,6 +51,9 @@
 						<p:column headerText="Nome">
 							<h:outputText value="#{item.descricao}" />
 						</p:column>
+						<p:column headerText="Permitir VR" style="text-align:center" >
+									<i class="#{item.habilitaVr == true ? 'pi pi-check' : 'pi pi-times'} #{item.habilitaVr == true ? 'sim' : 'nao'}"></i>
+								</p:column>
 						<p:column headerText="Ações"
 							style="width: 80px; text-align:center">
 							<p:commandButton id="btAlterar" icon="pi pi-pencil" process="@this"

@@ -9,11 +9,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.primefaces.model.chart.Axis;
-import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.ChartSeries;
-import org.primefaces.model.chart.LineChartModel;
 
 import com.reis.model.CategoriaSaida;
 import com.reis.model.Entrada;
@@ -92,6 +89,7 @@ public class GraficoComparacaoMB implements Serializable{
 		dateModel.setZoom(true);
 		dateModel.setAnimate(true);
 		dateModel.setLegendPosition("ne");
+		dateModelCategoriaPorDia.setShowPointLabels(true);
 
 	}
 	public void createDateModelCategoriaPorDatas(List<Saida> listaSaidas, List<Date> datas) {
@@ -122,18 +120,17 @@ public class GraficoComparacaoMB implements Serializable{
 		for(CategoriaSaida categoria : categorias) {
 			ChartSeries catSerie = new ChartSeries();
 			catSerie.setLabel(categoria.getDescricao());
-				catSerie.set(categoria.getDescricao(), pegaTotalSaidaCategoria(listaSaidas,categoria));
-				dateModelCategoriaTotais.addSeries(catSerie);
+				Double valor = pegaTotalSaidaCategoria(listaSaidas,categoria);
+				catSerie.set(categoria.getDescricao(), valor );
+				if(valor != null && valor >  0.0) {
+					dateModelCategoriaTotais.addSeries(catSerie);
+				}
 		}
+		
 		dateModelCategoriaTotais.setZoom(true);
 		dateModelCategoriaTotais.setAnimate(true);
 		dateModelCategoriaTotais.setShowPointLabels(true);
 		dateModelCategoriaTotais.setExtender("extLegend");
-		
-		
-		Axis yAxis = dateModelCategoriaTotais.getAxis(AxisType.Y);
-		yAxis.setMin(0);
-		yAxis.setMax(5000);
 	}
 
 	private Double pegaTotalSaidaCategoria(List<Saida> listaSaidas, CategoriaSaida categoria) {

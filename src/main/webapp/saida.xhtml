@@ -50,9 +50,7 @@
 					</div>
 					<div class="ui-g-1" style="text-align: center">
 						<p:outputLabel for="vr" value="VR" /><br />
-						<p:selectBooleanCheckbox id="vr" value="#{saidaMB.saida.vr}" label="VR" disabled="#{(saidaMB.saida.categoriaSaida.descricao != 'Mercado' and saidaMB.saida.categoriaSaida.descricao != 'Lanches e afins')
-						 or saidaMB.saida.categoriaSaida.descricao == null 
-							}" />
+						<p:selectBooleanCheckbox id="vr" value="#{saidaMB.saida.vr}" label="VR" disabled="#{saidaMB.saida.categoriaSaida.habilitaVr == false}" />
 					</div>
 					<div class="ui-g-1">
 						<p:outputLabel for="status" value="Status" />
