@@ -101,7 +101,8 @@ public class GraficoComparacaoMB implements Serializable{
 			ChartSeries catSerie = new ChartSeries();
 			catSerie.setLabel(categoria.getDescricao());
 			for(Date data :datas){
-				catSerie.set(sdf.format(data), temDataSaidaCategoria(data, listaSaidas,categoria));
+				Double valor = temDataSaidaCategoria(data, listaSaidas,categoria);
+					catSerie.set(sdf.format(data), valor);
 			}
 			dateModelCategoriaPorDia.addSeries(catSerie);
 		}
