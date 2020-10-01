@@ -36,9 +36,6 @@ public class RelatorioComparacaoMB implements Serializable {
 	private Double totalEntrada;
 	private Double totalSaida;
 	private Double totalDiferenca;
-	private Double totalEntradaVR;
-	private Double totalSaidaVR;
-	private Double totalDiferencaVR;
 	Map<String, Double> mapEntradas;
 	Map<String, Double> mapSaidas;
 	
@@ -51,9 +48,6 @@ public class RelatorioComparacaoMB implements Serializable {
 		totalEntrada = 0.0;
 		totalSaida = 0.0;
 		totalDiferenca = 0.0;
-		totalEntradaVR = 0.0;
-		totalSaidaVR = 0.0;
-		totalDiferencaVR = 0.0;
 		
 	}
 
@@ -93,30 +87,18 @@ public class RelatorioComparacaoMB implements Serializable {
 		totalEntrada = 0.0;
 		totalSaida = 0.0;
 		totalDiferenca = 0.0;
-		totalEntradaVR = 0.0;
-		totalSaidaVR = 0.0;
-		totalDiferencaVR = 0.0;
 		
 		listaS.forEach(x -> {
 			if (x.getStatus().equals(StatusEnum.PAGO)) {
-				if (x.isVr() == true) {
-					totalSaidaVR = totalSaidaVR + x.getValor();
-				} else {
 					totalSaida = totalSaida + x.getValor();
-				}
 				listaSaidas.add(x);
 			}
 		});
 
 		listaEntradas.forEach(x -> {
-			if (x.getTipoEntrada().getDescricao().equals("VR")) {
-				totalEntradaVR = totalEntradaVR + x.getValor();
-			} else {
 				totalEntrada = totalEntrada + x.getValor();
-			}
 		});
 		totalDiferenca = totalEntrada - totalSaida;
-		totalDiferencaVR = totalEntradaVR - totalSaidaVR;
 		ValoresEntradaPorUsuario();
 
 	}
@@ -193,30 +175,6 @@ public class RelatorioComparacaoMB implements Serializable {
 
 	public void setTotalDiferenca(Double totalDiferenca) {
 		this.totalDiferenca = totalDiferenca;
-	}
-
-	public Double getTotalEntradaVR() {
-		return totalEntradaVR;
-	}
-
-	public void setTotalEntradaVR(Double totalEntradaVR) {
-		this.totalEntradaVR = totalEntradaVR;
-	}
-
-	public Double getTotalSaidaVR() {
-		return totalSaidaVR;
-	}
-
-	public void setTotalSaidaVR(Double totalSaidaVR) {
-		this.totalSaidaVR = totalSaidaVR;
-	}
-
-	public Double getTotalDiferencaVR() {
-		return totalDiferencaVR;
-	}
-
-	public void setTotalDiferencaVR(Double totalDiferencaVR) {
-		this.totalDiferencaVR = totalDiferencaVR;
 	}
 
 	public Map<String, Double> getMapEntradas() {

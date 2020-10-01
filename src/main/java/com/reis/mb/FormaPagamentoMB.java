@@ -7,30 +7,30 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import com.reis.model.CategoriaSaida;
-import com.reis.service.CategoriaSaidaService;
+import com.reis.model.FormaPagamento;
+import com.reis.service.FormaPagamentoService;
 
 @ManagedBean
 @ViewScoped
-public class CategoriaSaidaMB {
+public class FormaPagamentoMB {
 
-	private CategoriaSaida categoriaSaida;
+	private FormaPagamento formaPagamento;
 	
-private CategoriaSaidaService service;
+private FormaPagamentoService service;
 	
-	public CategoriaSaidaMB() {
-		categoriaSaida = new CategoriaSaida();
-		service = new CategoriaSaidaService();
+	public FormaPagamentoMB() {
+		formaPagamento = new FormaPagamento();
+		service = new FormaPagamentoService();
 	}
 	
-	public List<CategoriaSaida> getCategoriaSaidas() {
+	public List<FormaPagamento> getFormaPagamentos() {
 	    return service.buscar(null);
 	  }
 	
 	public void excluir() {
 		try {
-			service.excluir(categoriaSaida);
-			categoriaSaida = new CategoriaSaida();
+			service.excluir(formaPagamento);
+			formaPagamento = new FormaPagamento();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso", "Registro excluído com sucesso"));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -40,8 +40,8 @@ private CategoriaSaidaService service;
 	
 	public void salvar() {
 		try {
-			service.ExecutarReq(categoriaSaida);
-			categoriaSaida = new CategoriaSaida();
+			service.ExecutarReq(formaPagamento);
+			formaPagamento = new FormaPagamento();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso", "Registro salvo com sucesso"));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -50,12 +50,12 @@ private CategoriaSaidaService service;
 		
 	}
 
-	public CategoriaSaida getCategoriaSaida() {
-		return categoriaSaida;
+	public FormaPagamento getFormaPagamento() {
+		return formaPagamento;
 	}
 
-	public void setCategoriaSaida(CategoriaSaida categoriaSaida) {
-		this.categoriaSaida = categoriaSaida;
+	public void setFormaPagamento(FormaPagamento formaPagamento) {
+		this.formaPagamento = formaPagamento;
 	}
 	
 	

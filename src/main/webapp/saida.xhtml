@@ -25,26 +25,32 @@
 							<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
 							<f:selectItems value="#{saidaMB.categoriaSaidas}" var="item"
 								itemLabel="#{item.descricao}" itemValue="#{item}" />
-								<p:ajax event="change" process="@this" update="vr"/>
 						</p:selectOneMenu>
 					</div>
 					<div class="ui-g-4">
 						<p:outputLabel for="descricao" value="Descricao" />
-						<p:inputText id="descricao" value="#{saidaMB.saida.descricao}"
+						<p:inputText id="descricao" value="#{saidaMB.saida.descricao}" placeholder="Descrição"
 							required="true" requiredMessage="Preencha o campo Valor" />
 					</div>
 					<div class="ui-g-2">
 						<p:outputLabel for="dataVencimento" value="Data Vencimento"/>
-						<p:calendar id="dataVencimento" value="#{saidaMB.saida.dataVencimento}" pattern="dd/MM/yyyy" locale="pt_BR" required="true" requiredMessage="Favor preencha o campo Data Vencimento"/>
+						<p:calendar id="dataVencimento" value="#{saidaMB.saida.dataVencimento}" pattern="dd/MM/yyyy" placeholder="Vencimento"
+						locale="pt_BR" required="true" requiredMessage="Favor preencha o campo Data Vencimento"/>
 					</div>
 					<div class="ui-g-1">
 						<p:outputLabel for="valor" value="Valor" />
-						<p:inputNumber id="valor" value="#{saidaMB.saida.valor}"
+						<p:inputNumber id="valor" value="#{saidaMB.saida.valor}" placeholder="Valor"
 							required="true" requiredMessage="Preencha o campo Valor" />
 					</div>
 					<div class="ui-g-1" style="text-align: center">
-						<p:outputLabel for="vr" value="VR" /><br />
-						<p:selectBooleanCheckbox id="vr" value="#{saidaMB.saida.vr}" label="VR" disabled="#{saidaMB.saida.categoriaSaida.habilitaVr == false}" />
+						<p:outputLabel for="formaPagamento" value="Forma PGTO" />
+						<p:selectOneMenu id="formaPagamento" style="width:98% !important"
+							value="#{saidaMB.saida.formaPagamento}" required="true"
+							requiredMessage="Preencha o campo Status"
+							converter="#{formaPagamentoConverter}">
+							<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+							<f:selectItems value="#{saidaMB.listaFormaPagamento}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+						</p:selectOneMenu>
 					</div>
 					<div class="ui-g-1">
 						<p:outputLabel for="status" value="Status" />
@@ -59,7 +65,7 @@
 					
 					<div class="ui-g-1">
 
-						<p:commandButton icon="pi pi-save" action="#{saidaMB.salvar}" process="categoria descricao dataVencimento valor status vr @this"
+						<p:commandButton icon="pi pi-save" action="#{saidaMB.salvar}" process="categoria descricao dataVencimento valor formaPagamento status @this"
 							update="@form" style="margin-top: 1.4em !important;">
 						</p:commandButton>
 					</div>
@@ -108,9 +114,6 @@
 										<f:convertNumber type="currency" locale="pt_BR" />
 									</h:outputText>
 								</p:column>
-								<p:column headerText="VR" filterBy="#{item.vr}" style="text-align:center" >
-									<i class="#{item.vr == true ? 'pi pi-check' : 'pi pi-times'} #{item.vr == true ? 'sim' : 'nao'}"></i>
-								</p:column>
 								<p:column headerText="Data Vencimento" filterBy="#{item.dataVencimento}">
 									<h:outputText value="#{item.dataVencimento}">
 										<f:convertDateTime pattern="dd/MM/yyyy" />
@@ -119,6 +122,10 @@
 								<p:column headerText="Categoria"
 									filterBy="#{item.categoriaSaida.descricao}">
 									<h:outputText value="#{item.categoriaSaida.descricao}" />
+								</p:column>
+								<p:column headerText="Forma PGTO"
+									filterBy="#{item.formaPagamento.descricao}">
+									<h:outputText value="#{item.formaPagamento.descricao}" />
 								</p:column>
 								<p:column headerText="Usuário" filterBy="#{item.usuario.nome}">
 									<h:outputText value="#{item.usuario.nome}" />

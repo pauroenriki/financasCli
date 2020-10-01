@@ -19,10 +19,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.reis.model.CategoriaSaida;
+import com.reis.model.FormaPagamento;
 import com.reis.model.Saida;
 import com.reis.model.StatusEnum;
 import com.reis.model.Usuario;
 import com.reis.service.CategoriaSaidaService;
+import com.reis.service.FormaPagamentoService;
 import com.reis.service.SaidaService;
 
 @ManagedBean
@@ -37,13 +39,17 @@ public class SaidaMB implements Serializable {
 	private Date dataFim;
 	private List<Saida> listaSaidas;
 	private Double valorTotal;
+	private List<FormaPagamento> listaFormaPagamento;
+	private FormaPagamentoService formaPagamentoService;
 	
 	
 	public SaidaMB() {
 		saida = new Saida();
 		service = new SaidaService();
+		formaPagamentoService = new FormaPagamentoService();
 		categoriaSaidas = new ArrayList<>();
 		listaSaidas = new ArrayList<>();
+		listaFormaPagamento = new ArrayList<>();
 		
 	}
 	@PostConstruct
@@ -58,6 +64,8 @@ public class SaidaMB implements Serializable {
 		usuario = (Usuario) session.getAttribute("usuario");
 		}
 		valorTotal = 0.0;
+		listaFormaPagamento = formaPagamentoService.buscar(null);
+		
 	}
 	
 	public StatusEnum[] getStatus(){
@@ -135,6 +143,12 @@ public class SaidaMB implements Serializable {
 	}
 	public void setValorTotal(Double valorTotal) {
 		this.valorTotal = valorTotal;
+	}
+	public List<FormaPagamento> getListaFormaPagamento() {
+		return listaFormaPagamento;
+	}
+	public void setListaFormaPagamento(List<FormaPagamento> listaFormaPagamento) {
+		this.listaFormaPagamento = listaFormaPagamento;
 	}
 	
 	

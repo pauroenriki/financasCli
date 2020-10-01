@@ -107,11 +107,6 @@
 									<h:outputText value="#{item.categoriaSaida.descricao}" />
 								</p:column>
 
-								<p:column headerText="VR" filterBy="#{item.vr}"
-									style="text-align:center">
-									<i
-										class="#{item.vr == true ? 'pi pi-check' : 'pi pi-times'} #{item.vr == true ? 'sim' : 'nao'}"></i>
-								</p:column>
 
 								<f:facet name="footer"> Valor Total de 
 								<h:outputText value="#{relatorioComparacaoMB.totalSaida}">
@@ -124,33 +119,14 @@
 					<f:facet name="footer">
 						<div class="ui-g">
 							<div class="ui-g-3">
-								Entrada VR
-								<h:outputText value="#{relatorioComparacaoMB.totalEntradaVR}">
-									<f:convertNumber type="currency" locale="pt_BR" />
-								</h:outputText>
-							</div>
-							<div class="ui-g-3">
 								Demais Entradas
 								<h:outputText value="#{relatorioComparacaoMB.totalEntrada}">
 									<f:convertNumber type="currency" locale="pt_BR" />
 								</h:outputText>
 							</div>
 							<div class="ui-g-3">
-								Saída VR
-								<h:outputText value="#{relatorioComparacaoMB.totalSaidaVR}">
-									<f:convertNumber type="currency" locale="pt_BR" />
-								</h:outputText>
-							</div>
-							<div class="ui-g-3">
 								Demais Saídas
 								<h:outputText value="#{relatorioComparacaoMB.totalSaida}">
-									<f:convertNumber type="currency" locale="pt_BR" />
-								</h:outputText>
-							</div>
-							<div
-								class="ui-g-6 #{relatorioComparacaoMB.totalDiferenca >0 ? 'verde' : 'vermelho'}">
-								Diferença VR
-								<h:outputText value="#{relatorioComparacaoMB.totalDiferencaVR}">
 									<f:convertNumber type="currency" locale="pt_BR" />
 								</h:outputText>
 							</div>

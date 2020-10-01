@@ -9,7 +9,7 @@
 <ui:composition template="/template.xhtml">
 	<ui:define name="header">
 
-		<h:outputLabel value="Cadastro de Categoria de Saída" />
+		<h:outputLabel value="Cadastro de Forma de Pagamento" />
 	</ui:define>
 	<ui:define name="article">
 			<h:form id="form">
@@ -18,11 +18,10 @@
 			<div class="ui-g ">
 					<div class="ui-g-6">
 						<p:outputLabel for="descricao" value="Descrição" />
-						<p:inputText id="descricao" value="#{categoriaSaidaMB.categoriaSaida.descricao}" required="true" requiredMessage="Descrição é obrigatório"/>
+						<p:inputText id="descricao" value="#{formaPagamentoMB.formaPagamento.descricao}" required="true" requiredMessage="Descrição é obrigatório"/>
 					</div>
-					
 					<div class="ui-g-3">
-						<p:commandButton icon="pi pi-save" action="#{categoriaSaidaMB.salvar}"
+						<p:commandButton icon="pi pi-save" action="#{formaPagamentoMB.salvar}"
 							update="@form" style="margin-top: 1.4em !important;">
 						</p:commandButton>
 					</div>
@@ -33,7 +32,7 @@
 			<p:panel styleClass="container"  header="Categorias de Saída">
 			<div class="ui-g ">
 				<div class="ui-g-12">
-					<p:dataTable value="#{categoriaSaidaMB.categoriaSaidas}" var="item" rows="5"
+					<p:dataTable value="#{formaPagamentoMB.formaPagamentos}" var="item" rows="5"
                  paginator="true"
                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                  currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} Registros"
@@ -46,21 +45,18 @@
 						<p:column headerText="Nome">
 							<h:outputText value="#{item.descricao}" />
 						</p:column>
-						<p:column headerText="Permitir VR" style="text-align:center" >
-									<i class="#{item.habilitaVr == true ? 'pi pi-check' : 'pi pi-times'} #{item.habilitaVr == true ? 'sim' : 'nao'}"></i>
-								</p:column>
 						<p:column headerText="Ações"
 							style="width: 80px; text-align:center">
 							<p:commandButton id="btAlterar" icon="pi pi-pencil" process="@this"
 								update="@form">
 								<f:setPropertyActionListener value="#{item}"
-									target="#{categoriaSaidaMB.categoriaSaida}" />
+									target="#{formaPagamentoMB.formaPagamento}" />
 								<p:tooltip for="btAlterar" value="Alterar" />
 							</p:commandButton>
-							<p:commandButton id="btExcluir" icon="pi pi-minus" style="margin-left:5px;" process="@this" action="#{categoriaSaidaMB.excluir}" update="@form">
+							<p:commandButton id="btExcluir" icon="pi pi-minus" style="margin-left:5px;" process="@this" action="#{formaPagamentoMB.excluir}" update="@form">
 								<p:confirm header="Confirme a ação" message="Deseja excluir o registro?" icon="pi pi-exclamation-triangle" />
 								<f:setPropertyActionListener value="#{item}"
-									target="#{categoriaSaidaMB.categoriaSaida}" />
+									target="#{formaPagamentoMB.formaPagamento}" />
 							</p:commandButton>
 								<p:tooltip for="btExcluir" value="Excluir" />
 						</p:column>
